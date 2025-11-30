@@ -1,7 +1,7 @@
 # FIDO2 Security Key Management Cheat Sheet (libfido2 tools)
 **Fully updated & verified – November 2025**  
 Works with libfido2 ≥ 1.14 (current 1.16.0 as of May 2025)  
-Tested on YubiKey 5C NFC & bTrustKey T120
+Tested on YubiKey 5C NFC & TrustKey T120
 
 ```bash
 # Always start with this – no PIN required
