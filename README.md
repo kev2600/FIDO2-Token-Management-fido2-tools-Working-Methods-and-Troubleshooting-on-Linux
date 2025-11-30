@@ -30,7 +30,7 @@ sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"20a0\", TAG+=\"uacce
 sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"311f\", TAG+=\"uaccess\", MODE=\"0660\"" >> /etc/udev/rules.d/99-fido-keys-common.rules'
 ```
 
-All 3.
+Bonus, copy and past this in your terminal. It will install all 3 permissions in one go.
 ```bash
 sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"1050\", TAG+=\"uaccess\", MODE=\"0660\"" > /etc/udev/rules.d/99-fido-keys-common.rules'
 sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"20a0\", TAG+=\"uaccess\", MODE=\"0660\"" >> /etc/udev/rules.d/99-fido-keys-common.rules'
