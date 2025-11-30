@@ -1,5 +1,6 @@
 # Complete FIDO2 Hardware Token Management on Linux (2025 Edition)  
-Tested on Fedora, Nobara
+Tested on Fedora, Nobara.
+
 This need to be tested on the followin distro to validate the commands: Arch, Ubuntu, Debian with YubiKey, Nitrokey 3, SoloKeys 2, Google Titan, Feitian, OnlyKey, etc.
 
 ### Critical Warnings Up Front
