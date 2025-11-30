@@ -1,5 +1,6 @@
 # Complete FIDO2 Hardware Token Management on Linux (2025 Edition)  
-Tested on Fedora, Nobara, Arch, Ubuntu, Debian with YubiKey, Nitrokey 3, SoloKeys 2, Google Titan, Feitian, OnlyKey, etc.
+Tested on Fedora, Nobara
+This need to be tested on the followin distro to validate the commands: Arch, Ubuntu, Debian with YubiKey, Nitrokey 3, SoloKeys 2, Google Titan, Feitian, OnlyKey, etc.
 
 ### Critical Warnings Up Front
 - `fido2-token -D` (single credential delete) is **almost always broken** for resident/discoverable credentials → use factory reset or vendor tool instead.
