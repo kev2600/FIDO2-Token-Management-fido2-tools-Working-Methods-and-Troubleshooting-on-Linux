@@ -22,9 +22,21 @@ sudo usermod -aG plugdev $USER
 
 If you still get “Permission denied”, copy the built-in udev rules:
 ```bash
+# 1. Universal Rule for YubiKey (Vendor ID 1050)
+sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"1050\", TAG+=\"uaccess\", MODE=\"0660\"" > /etc/udev/rules.d/99-fido-keys-common.rules'
+
+# 2. Universal Rule for Nitrokey (Vendor ID 20a0)
+sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"20a0\", TAG+=\"uaccess\", MODE=\"0660\"" >> /etc/udev/rules.d/99-fido-keys-common.rules'
+
+# 3. Generic Rule for ALL TrustKey Devices (Vendor ID 311f)
+sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"311f\", TAG+=\"uaccess\", MODE=\"0660\"" >> /etc/udev/rules.d/99-fido-keys-common.rules'
+```
+
+All 3.
+```bash
 sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"1050\", TAG+=\"uaccess\", MODE=\"0660\"" > /etc/udev/rules.d/99-fido-keys-common.rules'
 sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"20a0\", TAG+=\"uaccess\", MODE=\"0660\"" >> /etc/udev/rules.d/99-fido-keys-common.rules'
-sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"311f\", ATTRS{idProduct}==\"a6e9\", TAG+=\"uaccess\", MODE=\"0660\"" >> /etc/udev/rules.d/99-fido-keys-common.rules'
+sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"311f\", TAG+=\"uaccess\", MODE=\"0660\"" >> /etc/udev/rules.d/99-fido-keys-common.rules'
 ```
 
 ### 2. Find Your Device Path
