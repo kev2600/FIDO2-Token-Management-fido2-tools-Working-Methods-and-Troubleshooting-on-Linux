@@ -66,18 +66,18 @@ watch -n 1 "dmesg | tail -n 4"
 
 ### 4. Core Generic Commands (fido2-token)
 
-| Purpose                              | Command                                                            | Notes                                      |
-|--------------------------------------|--------------------------------------------------------------------|--------------------------------------------|
-| List connected tokens                | `fido2-token -L`                                                   |                                            |
-| Full device info                     | `fido2-token -I "$DEVICE"`                                         | Shows AAGUID, firmware, capabilities      |
-| Firmware version                     | `fido2-token -V "$DEVICE"`                                         |                                            |
-| PIN attempts left                    | `fido2-token -I "$DEVICE" `|` grep -i attempts`                     |                                            |
-| List resident/discoverable keys      | `fido2-cred -L -r "$DEVICE"` **(recommended)**                     | Pretty output, works everywhere            |
-| Classic list (with PIN from stdin)   | `echo "yourpin" `|` fido2-token -L -r -k "$DEVICE"`                 | Good for scripts                           |
-| Verify PIN non-interactively         | `echo "yourpin" `|` fido2-token -V "$DEVICE"`                          | Required before some operations            |
-| Factory reset (works anytime now)    | `sudo fido2-token -R "$DEVICE"`                                    | Wipes everything                           |
-| Set first PIN (works anytime now)    | `fido2-token -S "$DEVICE"`                                         |                                            |
-| Change existing PIN                  | `fido2-token -C "$DEVICE"`                                       |                                            |
+| Purpose                          | Command                                                      | Notes                             |
+|----------------------------------|--------------------------------------------------------------|-----------------------------------|
+| List tokens                      | `fido2-token -L`                                             |                                   |
+| Info                             | `fido2-token -I "$DEVICE"`                                   | AAGUID, firmware, capabilities    |
+| Firmware version                 | `fido2-token -V "$DEVICE"`                                   |                                   |
+| PIN attempts                     | `fido2-token -I "$DEVICE" \| grep -i attempts`               |                                   |
+| List resident keys (best)        | `fido2-cred -L -r "$DEVICE"` **←**                          | Recommended                       |
+| List resident keys (classic)     | `echo "pin" \| fido2-token -L -r -k "$DEVICE"`               | Script-friendly                   |
+| Verify PIN                       | `echo "pin" \| fido2-token -V "$DEVICE"`                     |                                   |
+| Factory reset                    | `sudo fido2-token -R "$DEVICE"`                              | Works anytime now                 |
+| Set first PIN                    | `fido2-token -S "$DEVICE"`                                   | Works anytime now                 |
+| Change PIN                       | `fido2-token -C "$DEVICE"`                                   |                                   |
 
 ### 5. Vendor-Specific Tools – Prefer These When Available
 
