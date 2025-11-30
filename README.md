@@ -22,8 +22,9 @@ sudo usermod -aG plugdev $USER
 
 If you still get “Permission denied”, copy the built-in udev rules:
 ```bash
-sudo cp 70-u2f.rules /etc/udev/rules.d/   # most distros already ship this
-sudo udevadm control --reload-rules && udevadm trigger
+sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"1050\", TAG+=\"uaccess\", MODE=\"0660\"" > /etc/udev/rules.d/99-fido-keys-common.rules'
+sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"20a0\", TAG+=\"uaccess\", MODE=\"0660\"" >> /etc/udev/rules.d/99-fido-keys-common.rules'
+sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"311f\", ATTRS{idProduct}==\"a6e9\", TAG+=\"uaccess\", MODE=\"0660\"" >> /etc/udev/rules.d/99-fido-keys-common.rules'
 ```
 
 ### 2. Find Your Device Path
