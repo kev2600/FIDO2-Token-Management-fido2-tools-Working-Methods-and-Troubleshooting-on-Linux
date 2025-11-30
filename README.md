@@ -71,10 +71,10 @@ watch -n 1 "dmesg | tail -n 4"
 | List connected tokens                | `fido2-token -L`                                                   |                                            |
 | Full device info                     | `fido2-token -I "$DEVICE"`                                         | Shows AAGUID, firmware, capabilities      |
 | Firmware version                     | `fido2-token -V "$DEVICE"`                                         |                                            |
-| PIN attempts left                    | `fido2-token -I "$DEVICE" | grep -i attempts`                     |                                            |
+| PIN attempts left                    | `fido2-token -I "$DEVICE" `|` grep -i attempts`                     |                                            |
 | List resident/discoverable keys      | `fido2-cred -L -r "$DEVICE"` **(recommended)**                     | Pretty output, works everywhere            |
-| Classic list (with PIN from stdin)   | `echo "yourpin" | fido2-token -L -r -k "$DEVICE"`                 | Good for scripts                           |
-| Verify PIN non-interactively         | `echo "yourpin" | fido2-token -V "$DEVICE"`                          | Required before some operations            |
+| Classic list (with PIN from stdin)   | `echo "yourpin" `|` fido2-token -L -r -k "$DEVICE"`                 | Good for scripts                           |
+| Verify PIN non-interactively         | `echo "yourpin" `|` fido2-token -V "$DEVICE"`                          | Required before some operations            |
 | Factory reset (works anytime now)    | `sudo fido2-token -R "$DEVICE"`                                    | Wipes everything                           |
 | Set first PIN (works anytime now)    | `fido2-token -S "$DEVICE"`                                         |                                            |
 | Change existing PIN                  | `fido2-token -C "$DEVICE"`                                       |                                            |
