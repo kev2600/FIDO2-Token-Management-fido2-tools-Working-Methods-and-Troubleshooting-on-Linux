@@ -39,6 +39,16 @@ sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"20a0\", TAG+=\"uacce
 sudo sh -c 'echo "SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"311f\", TAG+=\"uaccess\", MODE=\"0660\"" >> /etc/udev/rules.d/99-fido-keys-common.rules'
 ```
 
+Next Step: Apply the Rules
+The final crucial step is to tell the system to load and apply these new rules immediately.
+
+Please run the following commands:
+
+```bash
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+```
+
 ### 2. Find Your Device Path
 ```bash
 fido2-token -L
