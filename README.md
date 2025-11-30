@@ -71,7 +71,7 @@ lsusb
 |:-------------------------------------|:-------------------------------------------------------------------------|:-----------------------------------------------------------------------|
 | List all connected tokens | `fido2-token -L` | |
 | Full device info | `fido2-token -I /dev/"${DEVICE}"` | Shows AAGUID, firmware, capabilities |
-| Remaining PIN attempts | "fido2-token -I /dev/"${DEVICE}" &"|"& grep -i 'pin'`" | Attempt left before you get locked out |
+| Remaining PIN attempts | `fido2-token -I /dev/"${DEVICE}" | grep -i 'pin'` | Attempt left before you get locked out |
 | Verify firmware version (no side effects) | `sudo fido2-token -V "${DEVICE}"` | Vewrify firmware version |
 | List resident credentials | `sudo fido2-token -L -r "${DEVICE}"` | Requires PIN |
 | List with non-interactive PIN | (`echo -n "123456" | fido2-token -L -r -k "${DEVICE}"`) | Great for scripts |
