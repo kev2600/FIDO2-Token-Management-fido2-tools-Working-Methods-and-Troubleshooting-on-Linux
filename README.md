@@ -39,6 +39,13 @@ Set it once for the whole session:
 DEVICE="/dev/hidraw9"   # ← change every time you replug!
 ```
 
+You can begin by checking if your security key is recognized by the system:
+
+Check for device recognition (if a key is plugged in):
+```bash
+lsusb
+```
+
 ### 3. Core fido2-token Commands (Generic, works on all keys)
 
 | Purpose                              | Command                                                                 | Notes                                                                 |
