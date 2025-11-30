@@ -71,8 +71,8 @@ lsusb
 |:-----------------------------------|:------------------------------------------------------------------------|:----------------------------------------|
 | List all connected tokens          | <code>fido2-token -L</code>                                             |                                         |
 | Full device info                   | <code>fido2-token -I /dev/"${DEVICE}"</code>                            | Shows AAGUID, firmware, capabilities    |
-| Remaining PIN attempts             | <code>fido2-token -I /dev/"${DEVICE}" \| grep -i 'pin'</code>           | Attempts left before lockout          |
-| Verify current PIN (safe)          | <code>sudo fido2-token -V "${DEVICE}"</code>                            | No side effects – very useful           |
+| Remaining PIN attempts             | <code>fido2-token -I /dev/"${DEVICE}" \| grep -i 'pin'</code>           | Attempts left before lockout            |
+| Current firmware (safe)            | <code>sudo fido2-token -V "${DEVICE}"</code>                            | No side effects                         |
 | List resident credentials          | <code>sudo fido2-token -L -r "${DEVICE}"</code>                         | Requires PIN                            |
 | Non-interactive resident keys list | <code>echo -n "123456" \| fido2-token -L -r -k "${DEVICE}"</code>       | Perfect for scripts                     |
 | Discoverable credentials slots     | <code>sudo fido2-token -I -c "${DEVICE}"</code>                         | Shows used / remaining slots            |
