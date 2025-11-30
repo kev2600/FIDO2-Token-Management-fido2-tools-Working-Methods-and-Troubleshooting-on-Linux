@@ -22,7 +22,6 @@ export DEVICE=/dev/hidraw6   # set once per session
 | Remaining PIN attempts                 | `fido2-token -I "$DEVICE" \| grep -i "pin retries"`                             | e.g. `pin retries: 8`                                       |
 | List discoverable credentials (passkeys) – **recommended** | `fido2-cred -L -r "$DEVICE"` (interactive) <br>or `echo "PIN" \| fido2-cred -L -r "$DEVICE"` | Shows RP ID, username, creation time – best for passkeys   |
 | List resident keys (legacy, IDs only)  | `echo "PIN" \| fido2-token -L -r "$DEVICE"`                                    | Raw credential IDs only (still works but less useful)       |
-| Verify PIN (script-friendly)           | `echo "PIN" \| fido2-token -V "$DEVICE"`                                      | Returns exit code 0 on success, prints protocol version     |
 | Change PIN                             | `fido2-token -C "$DEVICE"`                                                   | Interactive (old → new)                                     |
 | Set first PIN (if none exists)         | `fido2-token -S "$DEVICE"`                                                   | Interactive, min 4 characters                               |
 | Factory reset (wipe everything)        | `sudo fido2-token -R "$DEVICE"`                                              | **Irreversible**, no PIN required, no confirmation         |
