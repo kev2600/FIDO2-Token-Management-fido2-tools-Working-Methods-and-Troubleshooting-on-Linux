@@ -6,11 +6,11 @@ Tested on Fedora, Nobara, Arch, Ubuntu, Debian with YubiKey, Nitrokey 3, SoloKey
 - Most operations that change state (set PIN first time, factory reset) are **time-critical** (5–10 seconds after plug-in).
 - You **must touch** the key when it blinks — commands will hang forever otherwise.
 - Always know your device node: `fido2-token -L` or `ls /dev/hidraw*` + `journalctl -k | tail`
-
+nitrokey-app
 ### 1. Permissions & udev Rules (Do This First!)
 ```bash
 # Fedora / Nobara / RHEL
-sudo dnf install libfido2 fido2-tools yubikey-manager nitrokey3-udev
+sudo dnf install libfido2 fido2-tools yubikey-manager nitrokey-app yubikey-manager
 
 # Ubuntu / Debian
 sudo apt install libfido2-1 fido2-tools yubikey-manager pcscd libnitrokey-dev
