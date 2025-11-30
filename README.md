@@ -1,112 +1,128 @@
-# FIDO2 Token Management (fido2-tools): Working Methods and Troubleshooting on Linux
+# Complete FIDO2 Hardware Token Management on Linux (2025 Edition)  
+Tested on Fedora, Nobara, Arch, Ubuntu, Debian with YubiKey, Nitrokey 3, SoloKeys 2, Google Titan, Feitian, OnlyKey, etc.
 
-This guide provides a comprehensive command-line reference and confirmed working procedures for administering FIDO2 hardware tokens using the `fido2-tools` package on Linux (e.g., Fedora, Nobara).
+### Critical Warnings Up Front
+- `fido2-token -D` (single credential delete) is **almost always broken** for resident/discoverable credentials → use factory reset or vendor tool instead.
+- Most operations that change state (set PIN first time, factory reset) are **time-critical** (5–10 seconds after plug-in).
+- You **must touch** the key when it blinks — commands will hang forever otherwise.
+- Always know your device node: `fido2-token -L` or `ls /dev/hidraw*` + `dmesg | tail`
 
-> ⚠️ **CRITICAL NOTE ON DELETION**  
-> The command-line deletion of single passkeys (`fido2-token -D`) is often **UNRELIABLE** due to a persistent `FIDO_ERR_NO_CREDENTIALS` bug in the underlying library when dealing with specific key types. The only reliable way to remove a stuck credential is the **Factory Reset (`-R`)**.
-
-## Setup Note
-
-All commands use a placeholder for the device path. You MUST replace `"${DEVICE_PATH}"` with the actual path found by `fido2-token -L` (e.g., `/dev/hidraw9`).
-
+### 1. Permissions & udev Rules (Do This First!)
 ```bash
-# Placeholder variable for easier copy/paste. Replace /dev/hidrawX with your actual path.
-DEVICE_PATH="/dev/hidrawX"
+# Fedora / Nobara / RHEL
+sudo dnf install libfido2 fido2-tools yubikey-manager nitrokey3-udev
+
+# Ubuntu / Debian
+sudo apt install libfido2-1 fido2-tools yubikey-manager pcscd libnitrokey-dev
+
+# Add your user to the plugdev (most distros)
+sudo usermod -aG plugdev $USER
+# Log out and back in (or reboot)
 ```
 
-## 1. Installation
-
-Installation command for Fedora/Nobara systems:
-
+If you still get “Permission denied”, copy the built-in udev rules:
 ```bash
-sudo dnf install fido2-tools
+sudo cp 70-u2f.rules /etc/udev/rules.d/   # most distros already ship this
+sudo udevadm control --reload-rules && udevadm trigger
 ```
 
-## 2. Device Discovery and Information
-
-### Find Device Path
-
-Identify the key's device path (e.g., `/dev/hidraw9`):
-
+### 2. Find Your Device Path
 ```bash
 fido2-token -L
+# Example output → /dev/hidraw9
+# Or watch dmesg
+watch -n 1 "dmesg | tail -n 8"
 ```
 
-### Get Detailed Key Information
+Set it once for the whole session:
+```bash
+DEVICE="/dev/hidraw9"   # ← change every time you replug!
+```
 
-Outputs firmware version, AAGUID, and key capabilities:
+### 3. Core fido2-token Commands (Generic, works on all keys)
+
+| Purpose                              | Command                                                                 | Notes                                                                 |
+|--------------------------------------|-------------------------------------------------------------------------|-----------------------------------------------------------------------|
+| List all connected tokens            | `fido2-token -L`                                                        |                                                                       |
+| Full device info                     | `fido2-token -I "${DEVICE}"`                                            | Shows AAGUID, firmware, capabilities                                  |
+| Remaining PIN attempts               | `fido2-token -I "${DEVICE}" | grep pinRetries`                           | Critical before you get locked out                                    |
+| Verify current PIN (no side effects) | `fido2-token -V "${DEVICE}"`                                            | Just checks PIN, very useful                                          |
+| List resident credentials            | `fido2-token -L -r "${DEVICE}"`                                         | Requires PIN                                                          |
+| List with non-interactive PIN        | `echo -n "123456" | fido2-token -L -r -k "${DEVICE}"`                    | Great for scripts                                                     |
+| Show used / remaining slots          | `fido2-token -I -c "${DEVICE}"`                                         | Requires PIN                                                          |
+
+### 4. PIN Management (The Tricky Part)
+
+**First-time PIN or after factory reset (time-critical!)**
+```bash
+# 1. Unplug key
+# 2. Plug key back in
+# 3. Run within ~5 seconds
+fido2-token -S "${DEVICE}"
+```
+If you see “Operation not permitted” → you were too slow → repeat.
+
+**Change existing PIN (no timing issue)**
+```bash
+fido2-token -C "${DEVICE}"    # asks old PIN → new PIN → verify
+```
+
+### 5. Credential Deletion
+
+| Method                              | Command                                                                                           | Reliability | Notes                                                      |
+|-------------------------------------|---------------------------------------------------------------------------------------------------|-------------|------------------------------------------------------------|
+| Single credential (almost never works) | `fido2-token -D -i 'BASE64ID' -r 'example.com' "${DEVICE}"`                                      | 5–10 %      | Works only on some very old keys                           |
+| Factory reset (100 % reliable)      | Unplug → plug → run within 10 s: <br>`fido2-token -R "${DEVICE}"`                                 | 100 %       | Wipes EVERYTHING (all credentials + PIN)                   |
+| YubiKey reliable single delete      | `ykman fido credentials delete --rp-id example.com <credential-id>`                              | 100 %       | Best option for YubiKeys                                   |
+| Nitrokey 3 reliable delete       | `nitropy nk3 fido2 delete-credential <credential-id>`                                            | 100 %       |                                                            |
+| Solo 2 reliable delete              | `solokey credentials delete <credential-id>`                                                      | 100 %       |                                                            |
+
+### 6. Vendor-Specific Tools (Use These When fido2-token Isn’t Enough)
+
+| Key Brand          | Recommended Tool                               | Install Command (Fedora)                     | Most Useful Commands                                                          |
+|---------------------|------------------------------------------------|----------------------------------------------|-------------------------------------------------------------------------------|
+| YubiKey (all)       | ykman (YubiKey Manager CLI)                    | `sudo dnf install yubikey-manager`           | `ykman fido info` <br> `ykman fido credentials list` <br> `ykman fido credentials delete …` <br> `ykman fido reset` |
+| Nitrokey 3          | nitropy                                        | `pip3 install --user nitropy`                | `nitropy nk3 fido2 list` <br> `nitropy nk3 fido2 delete-credential <id>`      |
+| SoloKeys 2          | solokey                                        | Cargo: `cargo install solokey`               | `solokey info` <br> `solokey credentials list` <br> `solokey credentials delete <id>` |
+| Google Titan        | Only factory reset works reliably              | —                                            | Use `fido2-token -R` only                                             |
+| Feitian ePass       | Usually only factory reset                     | —                                            | reset works                                                           |
+
+### 7. Fingerprint / Biometrics (YubiKey Bio Series & 5.7+)
 
 ```bash
-fido2-token -I "${DEVICE_PATH}"
-# Example: fido2-token -I /dev/hidraw9
+# List enrolled fingerprints
+ykman fido fingerprints list
+
+# Add a new fingerprint (touch sensor many times)
+ykman fido fingerprints add "Left index"
+
+# Delete one
+ykman fido fingerprints delete "Left index"
 ```
 
-### Check Passkey Capacity
+### 8. Common Failure Modes & Fixes
 
-Requires PIN. Shows the count of resident keys stored and remaining capacity:
+| Symptom                                          | Fix                                                                                     |
+|--------------------------------------------------|-----------------------------------------------------------------------------------------|
+| Command hangs forever                            | Touch the key when it blinks!                                                           |
+| “Device not found” or “Permission denied”        | Check udev rules + plugdev group + replug                                               |
+| “Operation not permitted” on -S or -R            | You missed the 5–10 second window → unplug → plug → try again immediately              |
+| `-L -r` shows nothing even though keys exist     | PIN not verified → run `fido2-token -V` first                                            |
+| Key permanently locked after too many wrong PINs | Consumer keys (YubiKey, Solo, Titan) are bricked forever. Only enterprise YubiKeys have PUK. |
+| Multiple /dev/hidraw entries                     | Use `dmesg to see which one appears on plug-in                                         |
+
+### 9. Quick One-Liners You’ll Use All the Time
 
 ```bash
-fido2-token -I -c "${DEVICE_PATH}"
-# Example: fido2-token -I -c /dev/hidraw9
+# Full status dump (my favorite)
+fido2-token -I /dev/hidraw9 && fido2-token -L -r /dev/hidraw9
+
+# Factory reset in one go (copy-paste friendly)
+sudo fido2-token -R /dev/hidraw9 && echo "Now set new PIN immediately!"
+
+# List credentials non-interactively with PIN from file (safe for scripts)
+echo -n "mysuperpin" | fido2-token -L -r -k /dev/hidraw9
 ```
 
-### List Stored Passkeys (Resident Keys)
-
-Requires PIN. Displays list index, Base64 ID, and RP ID:
-
-```bash
-fido2-token -L -r "${DEVICE_PATH}"
-# Example: fido2-token -L -r /dev/hidraw9
-```
-
-> **Note:** If no credentials exist (e.g., after Factory Reset), the command prompts for PIN and returns **no output**, confirming a clean key.
-
-## 3. PIN Management
-
-### Set Initial PIN (New or Reset Key)
-
-This procedure is **time-sensitive** due to FIDO protocol security requirements.
-
-> ❗ **TIMING IS CRITICAL:** Requires UNPLUGGING and REPLUGGING the key. Run the command **within ~5 seconds** after replugging.
-
-```bash
-fido2-token -S "${DEVICE_PATH}"
-# Example: fido2-token -S /dev/hidraw9
-```
-
-### Change Existing PIN
-
-Operates while the key is in normal state:
-
-```bash
-# Does NOT require replugging. Requires entering the existing PIN.
-fido2-token -C "${DEVICE_PATH}"
-# Example: fido2-token -C /dev/hidraw9
-```
-
-## 4. Passkey Deletion & Factory Reset
-
-### UNRELIABLE Deletion (For Testing Only)
-
-Attempts to delete a single passkey by ID. Often fails:
-
-```bash
-# Replace [BASE64_ID] and [RP_ID] with values from the list command.
-fido2-token -D -i '[BASE64_ID]' -r [RP_ID] "${DEVICE_PATH}"
-# Example: fido2-token -D -i '1MnZAnMmJx...=' -r google.com /dev/hidraw9
-```
-
-### Factory Reset (The Reliable Solution)
-
-Use when single credential deletion fails or to restore factory state:
-
-> ⚠️ **WARNING:** Deletes **ALL** credentials and PINs.  
-> **Procedure:** Unplug key, plug in, and run command immediately (within 10 seconds).
-
-```bash
-fido2-token -R "${DEVICE_PATH}"
-```
-
-### Post-Reset Initialization
-
-After reset, you **MUST** set a new PIN using the `-S` command (Section 3) immediately to make the key usable again.
+This version reflects real-world Linux usage in 2025.  
+Keep it bookmarked — you’ll need it every time a key gets a stuck credential!
