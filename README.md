@@ -67,15 +67,16 @@ lsusb
 
 ### 3. Core fido2-token Commands (Generic, works on all keys)
 
-| Purpose | Command | Notes |
-| :--- | :--- | :--- |
-| List all connected tokens | `fido2-token -L` | |
-| Full device info | `fido2-token -I /dev/"${DEVICE}"` | Shows AAGUID, firmware, capabilities |
-| Remaining PIN attempts | `fido2-token -I /dev/"${DEVICE}" | grep -i 'pin'` | Attempt left before you get locked out |
-| Verify current PIN (no side effects) | `sudo fido2-token -V "${DEVICE}"` | Just checks PIN, very useful |
-| List resident credentials | `sudo fido2-token -L -r "${DEVICE}"` | Requires PIN |
-| List with non-interactive PIN | `echo -n "123456" | fido2-token -L -r -k "${DEVICE}"` | Great for scripts |
-| Show used / remaining slots | `sudo fido2-token -I -c "${DEVICE}"` | Requires PIN |
+| Purpose                            | Command                                                                 | Notes                                   |
+|:-----------------------------------|:------------------------------------------------------------------------|:----------------------------------------|
+| List all connected tokens          | <code>fido2-token -L</code>                                             |                                         |
+| Full device info                   | <code>fido2-token -I /dev/"${DEVICE}"</code>                            | Shows AAGUID, firmware, capabilities    |
+| Remaining PIN attempts             | <code>fido2-token -I /dev/"${DEVICE}" \| grep -i 'pin'</code>           | Attempts left before lockout          |
+| Verify current PIN (safe)          | <code>sudo fido2-token -V "${DEVICE}"</code>                            | No side effects – very useful           |
+| List resident credentials          | <code>sudo fido2-token -L -r "${DEVICE}"</code>                         | Requires PIN                            |
+| Non-interactive resident keys list | <code>echo -n "123456" \| fido2-token -L -r -k "${DEVICE}"</code>       | Perfect for scripts                     |
+| Discoverable credentials slots     | <code>sudo fido2-token -I -c "${DEVICE}"</code>                         | Shows used / remaining slots            |
+
 ### 4. PIN Management (The Tricky Part)
 
 **First-time PIN or after factory reset (time-critical!)**
