@@ -1,4 +1,4 @@
-Here’s a clean, ready-to-use version of the cheat sheet — perfect for dropping into a personal wiki, README, git repository notes, or your own dotfiles.
+Clean, ready-to-use version of the cheat sheet — perfect for dropping into a personal wiki, README, git repository notes, or your own dotfiles.
 
 ```markdown
 # FIDO2 Security Key Management Cheat Sheet (libfido2 tools)
