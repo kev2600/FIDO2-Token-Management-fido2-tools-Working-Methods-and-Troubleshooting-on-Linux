@@ -70,7 +70,7 @@ lsusb
 | Purpose                              | Command                                                                 | Notes                                                                 |
 |--------------------------------------|-------------------------------------------------------------------------|-----------------------------------------------------------------------|
 | List all connected tokens            | `fido2-token -L`                                                        |                                                                       |
-| Full device info                     | `fido2-token -I /dev/hidraw9`                                            | Shows AAGUID, firmware, capabilities                                  |
+| Full device info                     | `fido2-token -I /dev/"${DEVICE}"`                                            | Shows AAGUID, firmware, capabilities                                  |
 | Remaining PIN attempts               | `sudo fido2-token -I "${DEVICE}" | grep pinRetries`                           | Critical before you get locked out                                    |
 | Verify current PIN (no side effects) | `sudo fido2-token -V "${DEVICE}"`                                            | Just checks PIN, very useful                                          |
 | List resident credentials            | `sudo fido2-token -L -r "${DEVICE}"`                                         | Requires PIN                                                          |
