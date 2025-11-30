@@ -14,10 +14,6 @@ sudo dnf install libfido2 fido2-tools yubikey-manager nitrokey-app yubikey-manag
 
 # Ubuntu / Debian
 sudo apt install libfido2-1 fido2-tools yubikey-manager pcscd libnitrokey-dev
-
-# Add your user to the plugdev (most distros)
-sudo usermod -aG plugdev $USER
-# Log out and back in (or reboot)
 ```
 
 If you still get “Permission denied”, copy the built-in udev rules:
