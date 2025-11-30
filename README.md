@@ -1,7 +1,7 @@
 # FIDO2 Security Key Management Cheat Sheet (libfido2 tools)
 
 **100% correct for libfido2 1.16.0 – November 2025**  
-Tested on YubiKey 5 series, YubiKey Security Key, TrustKey T120, Nitrokey 3, Solo 2
+Tested on YubiKey 5C NFC & TrustKey T120.
 
 ```bash
 # 1. Find your key (no PIN needed, no sudo)
