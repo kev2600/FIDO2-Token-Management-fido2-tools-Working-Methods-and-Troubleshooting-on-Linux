@@ -7,7 +7,7 @@ This need to be tested on the followin distro to validate the commands: Arch, Ub
 - `fido2-token -D` (single credential delete) is **almost always broken** for resident/discoverable credentials → use factory reset or vendor tool instead.
 - Most operations that change state (set PIN first time, factory reset) are **time-critical** (5–10 seconds after plug-in).
 - You **must touch** the key when it blinks — commands will hang forever otherwise.
-- Always know your device node: `fido2-token -L` or `ls /dev/hidraw*` + `journalctl -k | tail`
+- Always know your device node: `fido2-token -L` or `ls /dev/hidraw*` + `journalctl -k | tail` or Nitro Key app
 - 
 ### 1. Permissions & udev Rules (Do This First!)
 ```bash
