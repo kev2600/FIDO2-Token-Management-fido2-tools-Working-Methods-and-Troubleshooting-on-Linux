@@ -18,7 +18,6 @@ export DEVICE=/dev/hidraw9   # do this once per session
 | Purpose | Command (copy-paste ready) | Notes |
 |---------|----------------------------|-------|
 | List all connected tokens | `fido2-token -L` | No PIN |
-| Device info (AAGUID, options, retries…) | `echo "PIN" \| fido2-token -I "$DEVICE"` | PIN required if set |
 | Firmware version (human readable) | `fido2-token -I "$DEVICE" \| awk '/major/{M=$2}/minor/{m=$2}/build/{b=$2}END{printf "%d.%d.%d\n",strtonum(M),strtonum(m),strtonum(b)}'` | Works on every device |
 | List resident keys / passkeys (recommended) | `fido2-token -L -r "$DEVICE"` (interactive) or `echo "PIN" \| fido2-token -L -r "$DEVICE"` | Shows RP ID, |
 | Change PIN (safest) | `fido2-token -C "$DEVICE"` | Interactive, highly recommended |
