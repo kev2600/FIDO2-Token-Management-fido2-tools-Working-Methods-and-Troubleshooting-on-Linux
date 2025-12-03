@@ -124,7 +124,8 @@ trustkey-info
 * Always use `fido2-token -L -r "$DEVICE"` to list passkeys (nothing else)
 * Never hard-code PINs in scripts
 * For YubiKey OTP/PIV/OpenPGP slots → use `ykman` instead
-* When PIN retries are exhausted, the device locks and requires a factory reset
+* When PIN retries are exhausted, the device locks and requires a factory reset (Only available on enterprise grade keys)
+* Some consumer grade keys are bricked when PIN retries are exhausted.
 * Factory reset requires sudo because it's a destructive operation that bypasses PIN protection
 * The TrustKey T120 is now permanently fixed on your machine — no more permission headaches!
 
