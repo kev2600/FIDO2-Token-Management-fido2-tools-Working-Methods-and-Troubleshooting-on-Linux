@@ -115,7 +115,7 @@ trustkey-info
 | Purpose | Command |
 |---------|---------|
 | Make a new discoverable credential | `fido2-cred -M -r "$DEVICE"` |
-| Delete a credential | "`echo "PIN" | fido2-token -D -i <cred-id> "$DEVICE"` (get `<cred-id>` from `-L -r`)" |
+| Delete a credential | `echo "PIN" *pipe* fido2-token -D -i <cred-id> "$DEVICE"` (get `<cred-id>` from `-L -r`)" |
 | Man pages | `man fido2-token` / `man fido2-cred` |
 
 **Note on credential deletion:** To get the `<cred-id>`, first list with `fido2-token -L -r "$DEVICE"` and extract the base64 cred ID from the output.
