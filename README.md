@@ -115,7 +115,7 @@ trustkey-info
 | Purpose | Command |
 |---------|---------|
 | Make a new discoverable credential | `fido2-cred -M -r "$DEVICE"` |
-| Delete a credential | `echo "PIN" | fido2-token -D -i <cred-id> "$DEVICE"` (get `<cred-id>` from `-L -r`) |
+| Delete a credential | "`echo "PIN" | fido2-token -D -i <cred-id> "$DEVICE"` (get `<cred-id>` from `-L -r`)" |
 | Man pages | `man fido2-token` / `man fido2-cred` |
 
 **Note on credential deletion:** To get the `<cred-id>`, first list with `fido2-token -L -r "$DEVICE"` and extract the base64 cred ID from the output.
@@ -127,8 +127,3 @@ trustkey-info
 * When PIN retries are exhausted, the device locks and requires a factory reset (Only available on enterprise grade keys)
 * Some consumer grade keys are bricked when PIN retries are exhausted.
 * Factory reset requires sudo because it's a destructive operation that bypasses PIN protection
-* The TrustKey T120 is now permanently fixed on your machine — no more permission headaches!
-
----
-
-This version is polished, accurate, and ready to publish. If you want more changes (e.g., add macOS notes or diagrams), let me know!
