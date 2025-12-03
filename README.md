@@ -121,7 +121,7 @@ trustkey-info
 **Note on credential deletion:** To get the `<cred-id>`, first list with `fido2-token -L -r "$DEVICE"` and extract the base64 cred ID from the output.
 
 ## Final Tips
-* Always use `fido2-token -L -r` to list passkeys (nothing else)
+* Always use `fido2-token -L -r "$DEVICE"` to list passkeys (nothing else)
 * Never hard-code PINs in scripts
 * For YubiKey OTP/PIV/OpenPGP slots → use `ykman` instead
 * When PIN retries are exhausted, the device locks and requires a factory reset
