@@ -42,7 +42,7 @@ printf "oldpin\nnewpin123\nnewpin123" | fido2-token -C "$DEVICE"
 
 ## Important 1.16.0 Gotchas (so you never get confused again)
 * `fido2-cred` has no `-L` option → never use `fido2-cred -L`
-* The only tool that lists resident keys is `fido2-token -L -r`
+* The only tool that lists resident keys is `fido2-token -L -r "$DEVICE"`
 * `-V` (uppercase) = print version. Always. Ignore it
 * Use `-d` flag for debug output (e.g., `fido2-token -I -d "$DEVICE"`) if things go wrong
 * Piping PINs works non-interactively, but interactive TTY prompts are safer/default
